@@ -13,27 +13,28 @@ let sum = 0
 for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
-    let num = ""
+    let runningNumber = ""
     let isPart = false
 
     for (let j = 0; j < line.length; j++) {
-        const char = line[j];
+        const char = line[j]
+        const isNumber = !isNaN(parseInt(char))
 
-        if (!isNaN(parseInt(char))) {
-            num += char
+        if (isNumber) {
+            runningNumber += char
 
             if (!isPart && isAdjacent(i, j)) {
                 isPart = true
             }
         }
 
-        if (isNaN(parseInt(char)) || j == line.length - 1) {
-            if (num != "") {
+        if (!isNumber || j == line.length - 1) {
+            if (runningNumber != "") {
                 if (isPart) {
-                    sum += parseInt(num)
+                    sum += parseInt(runningNumber)
                     isPart = false
                 }
-                num = ""
+                runningNumber = ""
             }
         }
     }

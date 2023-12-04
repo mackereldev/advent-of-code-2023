@@ -14,41 +14,37 @@ let sum = 0
 for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
-    let num = ""
+    let runningNum = ""
     let gearPos = ""
 
     for (let j = 0; j < line.length; j++) {
         const char = line[j];
 
         if (!isNaN(parseInt(char))) {
-            num += char
+            runningNum += char
 
             if (gearPos == "") {
-                const {found, pos} = isGearAdjacent(i, j)
-                
-                if (found) {
-                    gearPos = pos
-                }
+                gearPos = isGearAdjacent(i, j) || gearPos
             }
         }
 
         if (isNaN(parseInt(char)) || j == line.length - 1) {
-            if (num != "") {
+            if (runningNum != "") {
                 if (gearPos != "") {
                     const existingGear = gears.find((gear) => gear.pos == gearPos)
 
                     if (existingGear) {
-                        sum += existingGear.firstPart * parseInt(num)
+                        sum += existingGear.firstPart * parseInt(runningNum)
                     } else {
                         gears.push({
                             pos: gearPos,
-                            firstPart: parseInt(num),
+                            firstPart: parseInt(runningNum),
                         })
                     }
 
                     gearPos = ""
                 }
-                num = ""
+                runningNum = ""
             }
         }
     }
@@ -61,10 +57,7 @@ function isGearAdjacent(lineIndex, charIndex) {
                 if (charIndex + x >= 0 && charIndex + x < lineWidth) {
                     if (!(x == 0 && y == 0)) {
                         if (lines[lineIndex + y][charIndex + x] == "*") {
-                            return {
-                                found: true,
-                                pos: `${charIndex + x}.${lineIndex + y}`,
-                            }
+                            return `${charIndex + x}.${lineIndex + y}`
                         }
                     }
                 }
@@ -72,10 +65,7 @@ function isGearAdjacent(lineIndex, charIndex) {
         }
     }
 
-    return {
-        found: false,
-        pos: "",
-    }
+    return ""
 }
 
 console.log(sum)
